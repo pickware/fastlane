@@ -68,17 +68,24 @@ DEVICE_COLORS = [
   "Purple"
 ]
 
-# The versions / renaming scheme should be updated in case FB updates iPads
+# The versions / renaming scheme should be updated in case FB updates iPads or iPhone SE
+IPAD_PRO_11_VERSION = "2nd generation"
 IPAD_PRO_12_9_VERSION = "4th generation"
-IPAD_AIR_VERSION = "2019"
-IPAD_MINI_VERSION = "2019"
-IPAD_RENAMING_SCHEME = {
-  'iPad Pro 11' => 'iPad Pro (11-inch)',
+IPAD_AIR_VERSION = "3rd generation"
+IPAD_MINI_VERSION = "5th generation"
+IPAD_VERSION = "7th generation"
+IPHONE_SE_VERSION = "2nd generation"
+IPAD_IPHONE_RENAMING_SCHEME = {
+  # iPad
+  'iPad Pro 11' => "iPad Pro (11-inch) (#{IPAD_PRO_11_VERSION})",
   'iPad Pro 13' => "iPad Pro (12.9-inch) (#{IPAD_PRO_12_9_VERSION})",
-  'iPad Pro' => 'iPad Pro', # don't rename the iPad Pro 1st or 2nd gen from the 'legacy' folder
-  'iPad Air' => "iPad Air (#{IPAD_AIR_VERSION})",
+  'iPad Pro (12.9-inch) (2nd generation)' => 'iPad Pro (12.9-inch) (2nd generation)', # no-op to prevent `iPad Pro (12.9-inch) (2nd generation)` from being renamed at all
+  'iPad Air 2020' => "iPad Air (#{IPAD_AIR_VERSION})",
+  'iPad Air 2' => 'iPad Air 2', # no-op to prevent `iPad Air 2` from being renamed at all
   'iPad Mini' => "iPad Mini (#{IPAD_MINI_VERSION})",
-  'iPad' => 'iPad 10.2' # must be the last one so that only 'iPad' without any version will be renamed to 10.2
+  'iPad' => "iPad (#{IPAD_VERSION})", # must be the last one so that only 'iPad' without any version will be renamed
+  # iPhone
+  'iPhone SE' => "iPhone SE (#{IPHONE_SE_VERSION})",
 }
 
 task(:generate_device_frames) do
@@ -91,8 +98,8 @@ task(:generate_device_frames) do
   puts("  https://facebook.design/devices")
   puts("")
   confirm
-  puts("Currently the script renames iPad files according to the following scheme:")
-  puts(IPAD_RENAMING_SCHEME)
+  puts("Currently the script renames iPad and iPhone files according to the following scheme:")
+  puts(IPAD_IPHONE_RENAMING_SCHEME)
   puts("Update the script if they differ from the latest Facebook devices versions or naming schemes.")
   confirm
   puts("Move the content of the zip file into './raw'")
@@ -112,11 +119,9 @@ task(:generate_device_frames) do
     basename = File.basename(current_raw)
     next if should_skip_device?(basename)
 
-    cp(current_raw, output)
-    output_file_path = File.join(output, basename)
     sanitized_basename = sanitize_filename(basename)
     sanitized_file_path = File.join(output, sanitized_basename)
-    mv(output_file_path, sanitized_file_path) unless output_file_path == sanitized_file_path
+    cp(current_raw, sanitized_file_path)
     convert_image_resource(sanitized_file_path)
     image_assets << sanitized_basename
 
@@ -176,20 +181,24 @@ end
 
 # Facebook's device naming is inconsistent. This method fixes the file names.
 def sanitize_filename(filename)
-  perform_ipad_renaming(filename
+  perform_ipad_iphone_renaming(filename
       .gsub('Grey', 'Gray') # some Apple devices have "Grey" instead of "Gray" color -> unify
-      .gsub(' - Portrait', '') # iPads Pro include Portrait and Landscape - we just need Portrait; Landscape filtered via DEVICES_TO_SKIP
       .gsub(' - ', ' ') # Google Pixel device names are separated from their colors by a dash -> remove
+      .gsub(' — ', ' ') # iPhone 13 device names are separated from their colors by an em dash -> remove
+      .gsub('Macbook', 'MacBook') # some Apple MacBook devices use "Macbook" instead of "MacBook" -> unify
+      .gsub('-MacBook-', ' MacBook ') # some Apple Macbook device names are separated by dashes -> replace with spaces
+      .gsub('Space-Gray', 'Space Gray') # some Apple Macbook device names are separated by dashes -> replace with spaces
+      .gsub(' Portrait', '') # iPads Pro include Portrait and Landscape - we just need Portrait; Landscape filtered via DEVICES_TO_SKIP
       .gsub('Note10', 'Note 10') # Samsung Galaxy Note 10 is missing a space in "Note10"
       .gsub('Mi Mix Alpha Front', 'Mi Mix Alpha')) # Xiaomi Mi Mix Alpha contains the words "Front", "Back" and "Side" => back and side are filtered via DEVICES_TO_SKIP, "Front" removed from the name here
 end
 
-# Facebook doesn't include versions in iPad files - this function makes sure the correct versions are added
-# to the file names so that frames of older iPad versions are not accidentally overwritten by newer versions
+# Facebook doesn't include versions in iPad/ iPhone files - this function makes sure the correct versions are added
+# to the file names so that frames of older iPad/ iPhone versions are not accidentally overwritten by newer versions
 # to ensure backward compatibility.
-def perform_ipad_renaming(filename)
-  if filename.include?('iPad')
-    IPAD_RENAMING_SCHEME.each do |fb_name, frameit_name|
+def perform_ipad_iphone_renaming(filename)
+  if filename.include?('iPad') || filename.include?('iPhone')
+    IPAD_IPHONE_RENAMING_SCHEME.each do | fb_name, frameit_name|
       renamed = filename.gsub!(fb_name, frameit_name)
       return renamed unless renamed.nil?
     end
