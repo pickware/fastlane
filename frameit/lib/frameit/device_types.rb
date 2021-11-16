@@ -106,7 +106,9 @@ module Frameit
     XIAOMI_MI_MIX_ALPHA ||= Frameit::Device.new("xiaomi-mi-mix-alpha", "Xiaomi Mi Mix Alpha", 1, [[2088, 2250], [2250, 2088]], 388, nil, Platform::ANDROID)
     IPHONE_5S ||= Frameit::Device.new("iphone-5s", "Apple iPhone 5s", 2, [[640, 1096], [640, 1136], [1136, 600], [1136, 640]], 326, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_40, :use_legacy_iphone5s)
     IPHONE_5C ||= Frameit::Device.new("iphone-5c", "Apple iPhone 5c", 2, [[640, 1136], [1136, 640]], 326, Color::WHITE)
-    IPHONE_SE ||= Frameit::Device.new("iphone-se", "Apple iPhone SE", 3, [[640, 1096], [640, 1136], [1136, 600], [1136, 640]], 326, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_40)
+    IPHONE_SE ||= Frameit::Device.new("iphone-se-latest", "Apple iPhone SE (2nd generation)", 3, [[640, 1096], [640, 1136], [1136, 600], [1136, 640]], 326, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_40)
+    # backward compatible version of `iPHONE_SE`
+    IPHONE_SE_BC ||= Frameit::Device.new("iphone-se", "Apple iPhone SE", 1, [[640, 1096], [640, 1136], [1136, 600], [1136, 640]], 326, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_40)
     IPHONE_6S ||= Frameit::Device.new("iphone-6s", "Apple iPhone 6s", 4, [[750, 1334], [1334, 750]], 326, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_47, :use_legacy_iphone6s)
     IPHONE_6S_PLUS ||= Frameit::Device.new("iphone-6s-plus", "Apple iPhone 6s Plus", 4, [[1242, 2208], [2208, 1242]], 401, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_55, :use_legacy_iphone6s)
     IPHONE_7 ||= Frameit::Device.new("iphone-7", "Apple iPhone 7", 5, [[750, 1334], [1334, 750]], 326, Color::MATTE_BLACK, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_47, :use_legacy_iphone7)
@@ -124,22 +126,37 @@ module Frameit
     IPHONE_12_PRO ||= Frameit::Device.new("iphone-12-pro", "Apple iPhone 12 Pro", 10, [[1170, 2532], [2532, 1170]], 460, Color::SPACE_GRAY, Platform::IOS)
     IPHONE_12_PRO_MAX ||= Frameit::Device.new("iphone12-pro-max", "Apple iPhone 12 Pro Max", 10, [[1284, 2778], [2778, 1284]], 458, Color::GRAPHITE, Platform::IOS)
     IPHONE_12_MINI ||= Frameit::Device.new("iphone-12-mini", "Apple iPhone 12 Mini", 10, [[1125, 2436], [2436, 1125]], 476, Color::BLACK, Platform::IOS)
-    IPAD_10_2 ||= Frameit::Device.new("ipad-10-2", "Apple iPad 10.2", 1, [[1620, 2160], [2160, 1620]], 264, Color::SPACE_GRAY, Platform::IOS)
-    IPAD_AIR_2 ||= Frameit::Device.new("ipad-air-2", "Apple iPad Air 2", 1, [[1536, 2048], [2048, 1536]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD)
-    IPAD_AIR_2019 ||= Frameit::Device.new("ipad-air-2019", "Apple iPad Air (2019)", 2, [[1668, 2224], [2224, 1668]], 265, Color::SPACE_GRAY, Platform::IOS)
-    IPAD_MINI_4 ||= Frameit::Device.new("ipad-mini-4", "Apple iPad Mini 4", 2, [[1536, 2048], [2048, 1536]], 324, Color::SPACE_GRAY)
-    IPAD_MINI_2019 ||= Frameit::Device.new("ipad-mini-2019", "Apple iPad Mini (2019)", 3, [[1536, 2048], [2048, 1536]], 324, Color::SPACE_GRAY)
-    # this is 1st or 2nd gen of iPad Pro 12.9:
-    IPAD_PRO ||= Frameit::Device.new("ipad-pro", "Apple iPad Pro", 3, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO)
-    # 3rd generation:
-    IPAD_PRO_12_9 ||= Frameit::Device.new("ipadPro129", "Apple iPad Pro (12.9-inch) (3rd generation)", 4, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO_12_9)
-    # 4th generation:
-    IPAD_PRO_12_9_4 ||= Frameit::Device.new("ipadPro129", "Apple iPad Pro (12.9-inch) (4th generation)", 5, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO_12_9)
+
+    # iPads in the same order as listed in App Store Connect as well as the "Screenshots specification" docs
+    # https://help.apple.com/app-store-connect/#/devd274dd925 (i.e. from large to small)
+    # iPad 12.9 inch (iPad Pro >= 3rd gen; required by App Store Connect)
+    IPAD_PRO_12_9 ||= Frameit::Device.new("ipad-pro-129-latest", "Apple iPad Pro (12.9-inch) (4th generation)", 5, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO_12_9)
+    # 12.9 inch (iPad Pro <= 2nd gen; required by App Store Connect)
+    IPAD_PRO_12_9_2ND_GEN ||= Frameit::Device.new("ipad-pro-129-2nd-gen", "Apple iPad Pro (12.9-inch) (2nd generation)", 4, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO)
+    # 11 inch (iPad Pro, iPad Air 4th gen, iPad mini 6th gen)
+    IPAD_PRO_11 ||= Frameit::Device.new("ipad-pro-11-latest", "Apple iPad Pro (11-inch) (2nd generation)", 5, [[1668, 2388], [2388, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_11)
+    # 10.5 inch (iPad Pro, iPad Air 3rd gen, iPad >= 7th gen)
+    IPAD_AIR ||= Frameit::Device.new("ipad-air-latest", "Apple iPad Air (3rd generation)", 5, [[1668, 2224], [2224, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_10_5)
+    # 9.7 inch (iPad Pro, iPad Air 1st gen, iPad Air 2, iPad mini <= 5th gen, iPad <= 6th gen)
+    IPAD_AIR_2 ||= Frameit::Device.new("ipad-air-2", "Apple iPad Air 2", 4, [[1536, 2048], [2048, 1536]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD)
+    IPAD_MINI ||= Frameit::Device.new("ipad-mini-latest", "Apple iPad Mini (5th generation)", 4, [[1536, 2048], [2048, 1536]], 324, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD)
+    # Other iPads that are available in the frameit-frames repo but whose resolutions are not accepted by the app store
+    IPAD ||= Frameit::Device.new("ipad-latest", "Apple iPad (7th generation)", 2, [[1620, 2160], [2160, 1620]], 264, Color::SPACE_GRAY, Platform::IOS)
+
+    # The following are iPad devices as they were defined prior to making all frameit-frame names consistent. They are
+    # only added for backward compatibility with frameit-frames copied prior to the renaming.
+    IPAD_PRO_12_9_BC_3 ||= Frameit::Device.new("ipadPro129", "Apple iPad Pro (12.9-inch) (3rd generation)", 1, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO_12_9)
+    IPAD_PRO_12_9_BC_4 ||= Frameit::Device.new("ipadPro129", "Apple iPad Pro (12.9-inch) (4th generation)", 1, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO_12_9)
+    IPAD_PRO_12_9_2ND_GEN_BC ||= Frameit::Device.new("ipad-pro", "Apple iPad Pro", 1, [[2048, 2732], [2732, 2048]], 264, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_PRO)
+    IPAD_PRO_11_BC ||= Frameit::Device.new("ipadPro11", "Apple iPad Pro (11-inch)", 1, [[1668, 2388], [2388, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_11)
+    IPAD_AIR_BC ||= Frameit::Device.new("ipad-air-2019", "Apple iPad Air (2019)", 1, [[1668, 2224], [2224, 1668]], 265, Color::SPACE_GRAY, Platform::IOS)
     # iPad Pro (10.5-inch) is not in frameit-frames repo, but must be included so that we are backward compatible with PR #15373
     # priority must be lower so that users who didn't copy the frame to their frameit frames folder will not get an error
     # ID and formatted name must be exactly as specified so that device.detect_device() will select this device if the filename includes them
-    IPAD_PRO_10_5 ||= Frameit::Device.new("ipad105", "Apple iPad Pro (10.5-inch)", 1, [[1668, 2224], [2224, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_10_5)
-    IPAD_PRO_11 ||= Frameit::Device.new("ipadPro11", "Apple iPad Pro (11-inch)", 1, [[1668, 2388], [2388, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_11)
+    IPAD_PRO_10_5_BC ||= Frameit::Device.new("ipad105", "Apple iPad Pro (10.5-inch)", 1, [[1668, 2224], [2224, 1668]], 265, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::IOS_IPAD_10_5)
+    IPAD_MINI_BC_4 ||= Frameit::Device.new("ipad-mini-4", "Apple iPad Mini 4", 1, [[1536, 2048], [2048, 1536]], 324, Color::SPACE_GRAY)
+    IPAD_MINI_BC_2019 ||= Frameit::Device.new("ipad-mini-2019", "Apple iPad Mini (2019)", 1, [[1536, 2048], [2048, 1536]], 324, Color::SPACE_GRAY)
+    IPAD_BC ||= Frameit::Device.new("ipad-10-2", "Apple iPad 10.2", 1, [[1620, 2160], [2160, 1620]], 264, Color::SPACE_GRAY, Platform::IOS)
 
     MAC ||= Frameit::Device.new("mac", "Apple MacBook", 0, [[1280, 800], [1440, 900], [2560, 1600], [2880, 1800]], nil, Color::SPACE_GRAY, Platform::IOS, Deliver::AppScreenshot::ScreenSize::MAC)
 

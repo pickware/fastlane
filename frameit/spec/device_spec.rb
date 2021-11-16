@@ -53,6 +53,61 @@ describe Frameit::Device do
         expect_screen_size_from_file("screenshot-Portrait{1125x2436}.jpg", Platform::IOS).to eq(Devices::IPHONE_X)
         expect_screen_size_from_file("screenshot-Landscape{2436x1125}.jpg", Platform::IOS).to eq(Devices::IPHONE_X)
       end
+
+      it "should detect Apple iPad Pro (12.9-inch) (4th generation) in portrait and landscape if filename contains \"iPad Pro (12.9-inch) (4th generation)\"" do
+        expect_screen_size_from_file("iPad Pro (12.9-inch) (4th generation)-Portrait{2048x2732}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9)
+        expect_screen_size_from_file("iPad Pro (12.9-inch) (4th generation)-Landscape{2732x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9)
+      end
+
+      it "should detect Apple iPad Pro (12.9-inch) (4th generation) in portrait and landscape if filename contains \"iPad\" based on resolution and priority" do
+        expect_screen_size_from_file("iPad-Portrait{2048x2732}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9)
+        expect_screen_size_from_file("iPad-Landscape{2732x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9)
+      end
+
+      it "should detect Apple iPad Pro (12.9-inch) (2nd generation) in portrait and landscape if filename contains \"iPad Pro (12.9-inch) (2nd generation)\"" do
+        expect_screen_size_from_file("iPad Pro (12.9-inch) (2nd generation)-Portrait{2048x2732}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9_2ND_GEN)
+        expect_screen_size_from_file("iPad Pro (12.9-inch) (2nd generation)-Landscape{2732x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9_2ND_GEN)
+      end
+
+      it "should detect Apple iPad Pro (aka 2nd gen) in portrait and landscape if filename contains \"iPad Pro (12.9-inch)\" based on filename" do
+        expect_screen_size_from_file("iPad Pro (12.9-inch)-Portrait{2048x2732}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9_2ND_GEN_BC)
+        expect_screen_size_from_file("iPad Pro (12.9-inch)-Landscape{2732x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_12_9_2ND_GEN_BC)
+      end
+
+      it "should detect Apple iPad Pro (11-inch) (2nd generation) in portrait and landscape if filename contains \"iPad Pro (11-inch) (2nd generation)\"" do
+        expect_screen_size_from_file("iPad Pro (11-inch) (2nd generation)-Portrait{1668x2388}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_11)
+        expect_screen_size_from_file("iPad Pro (11-inch) (2nd generation)-Landscape{2388x1668}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_11)
+      end
+
+      it "should detect Apple iPad Pro (11-inch) in portrait and landscape if filename contains \"iPad Pro (11-inch)\" based on filename" do
+        expect_screen_size_from_file("iPad Pro (11-inch)-Portrait{1668x2388}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_11_BC)
+        expect_screen_size_from_file("iPad Pro (11-inch)-Landscape{2388x1668}.jpg", Platform::IOS).to eq(Devices::IPAD_PRO_11_BC)
+      end
+
+      it "should detect Apple iPad Air (3rd generation) in portrait and landscape if filename contains \"iPad Air\" based on priority" do
+        expect_screen_size_from_file("iPad Air-Portrait{1668x2224}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR)
+        expect_screen_size_from_file("iPad Air-Landscape{2224x1668}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR)
+      end
+
+      it "should detect Apple iPad Air 2 in portrait and landscape if filename contains \"iPad Air 2\"" do
+        expect_screen_size_from_file("iPad Air 2-Portrait{1536x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+        expect_screen_size_from_file("iPad Air 2-Landscape{2048x1536}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+      end
+
+      it "should detect Apple iPad Air 2 in portrait and landscape if filename contains \"iPad\" based on resolution and priority" do
+        expect_screen_size_from_file("iPad-Portrait{1536x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+        expect_screen_size_from_file("iPad-Landscape{2048x1536}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+      end
+
+      it "should detect Apple iPad Mini (5th generation) in portrait and landscape if filename contains \"iPad Air Mini\" based on priority" do
+        expect_screen_size_from_file("iPad Air Mini-Portrait{1536x2048}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+        expect_screen_size_from_file("iPad Air Mini-Landscape{2048x1536}.jpg", Platform::IOS).to eq(Devices::IPAD_AIR_2)
+      end
+
+      it "should detect Apple iPad (7th generation) in portrait and landscape if filename contains \"iPad\" based on resolution" do
+        expect_screen_size_from_file("iPad-Portrait{1620x2160}.jpg", Platform::IOS).to eq(Devices::IPAD)
+        expect_screen_size_from_file("iPad-Landscape{2160x1620}.jpg", Platform::IOS).to eq(Devices::IPAD)
+      end
     end
 
     describe "valid Android screen sizes" do
